@@ -76,7 +76,6 @@ order by 2,3
 
 
 -- Using CTE to perform Calculation on Partition By in previous query
-
 With PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingPeopleVaccinated)
 as
 (
@@ -121,8 +120,8 @@ Join "CovidVaccinations" vac
 Select *, (RollingPeopleVaccinated/Population)*100
 From PercentPopulationVaccinated
 
--- Creating View to store data for later visualizations
 
+-- Creating View to store data for later visualizations
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(vac.new_vaccinations) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
@@ -131,6 +130,4 @@ From "CovidDeaths" dea
 Join "Covidvaccinations" vac
 	On dea.location = vac.location
 	and dea.date = vac.date
-where dea.continent is not null 
-
-Select * FROM PercentPopulationVaccinated
+where dea.continent is not null
